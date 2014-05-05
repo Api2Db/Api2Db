@@ -785,50 +785,22 @@ class Api2Db_Actions
 		if( empty( $err ) ){
 
 
-			foreach ( $arg['checks'] as $type_check => $type_check_el ){
+			foreach ( $arg['checks'] as  $check ){
 				
-				if( in_array( $type_check, ['single','sql'] ) ){
+				if( method_exists( $this->Api2Db->checks,  $check ) ){
 
+					$result = $this->Api2Db->checks->{$check }($arg);
 
+					if( !empty( $result['error'] ) )
+						$err[] = $result;
+					
+				}else{
 
-					foreach ( $type_check_el as $key => $check ){
-
-						if( $type_check == 'sql' ){
-						
-							$check_key 	= $key;
-
-
-							$arg['sql'] = $this->Api2Db->functions->put_values( $check, array_merge( $p->putvalues, [ 'this' => [ 'value' => $arg['value'] ] ] ) );
-
-
-						
-						}else{
-							
-							$check_key = $check;
-						
-						}
-
-						if( method_exists( $this->Api2Db->checks,  $type_check . "_" . $check_key ) ){
-
-							$result = $this->Api2Db->checks->{ $type_check . "_" . $check_key }($arg);
-
-							if( !empty( $result['error'] ) ){
-							
-								$result['check_type']  = $type_check . "_" . $check_key;
-								$err[] = $result;
-							
-							}
-
-						}else{
-
-							$err[] = [ 'error' => 'bad_check_key', 'val' => $type_check . "_" . $check_key  ];
-						
-						}
-
-					}//endforeach;
+					$err[] = [ 'error' => 'bad_check_key', 'val' => $check_key  ];
+				
 				}
-
 			}
+
 
 			if( empty( $err ) ){
 				return true;
@@ -1136,18 +1108,18 @@ class Api2Db_Actions
 
 
 
-				if( isset( $filter['type'] ) ){
+				if( isset( $filter['sql'] ) ){
 					
-					if( $filter['type'] == 'like' )
+					if( $filter['sql'] == 'like' )
 						$sql = ':this->key like "%:this->value%"';
 
-					if( $filter['type'] == 'key' )
+					if( $filter['sql'] == 'key' )
 						$sql = ':this->key=":this->value"';
+
+					else( !empty( $filter['sql'] ) )
+						$sql = $filter['sql'];
 				}
 
-				if( !empty( $filter['sql'] ) ){
-					$sql = $filter['sql'];
-				}
 
 				if( empty( $sql ) )
 					continue;

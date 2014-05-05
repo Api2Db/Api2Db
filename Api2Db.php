@@ -64,7 +64,13 @@ class Api2Db {
 		if( get_parent_class( $params['checks'] ) == 'Api2Db_Checks' )
 			$this->checks = $params['checks'];
 		else
-			$this->checks = new Api2Db_Converts( $this->functions );
+			$this->checks = new Api2Db_Checks( $this->functions );
+
+
+		if( get_parent_class( $params['triggers'] ) == 'Api2Db_Triggers' )
+			$this->triggers = $params['triggers'];
+		else
+			$this->triggers = new Api2Db_Triggers();
 
 
 		if( get_parent_class( $params['actions'] ) == 'Api2Db_Actions' )
@@ -72,9 +78,6 @@ class Api2Db {
 		else
 			$this->actions = new  Api2Db_Actions( $this );
 
-
-		if( is_object( $params['triggers'] ) )
-			$this->triggers = $params['triggers'];
 
 	}
 
