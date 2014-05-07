@@ -5,6 +5,7 @@ require_once( dirname(__FILE__) . '/Api2Db_Storage.php');
 require_once( dirname(__FILE__) . '/Api2Db_Converts.php');
 require_once( dirname(__FILE__) . '/Api2Db_Checks.php');
 require_once( dirname(__FILE__) . '/Api2Db_Actions.php');
+require_once( dirname(__FILE__) . '/Api2Db_Triggers.php');
 require_once( dirname(__FILE__) . '/Api2Db_Db.php');
 
 

@@ -133,7 +133,10 @@ class Api2Db_Actions
 
 	}
 
-	private function make_submodule( $request, $p_parent ){
+
+
+
+	private function make_submodule( $request, $p_parent, $_this = array() ){
 
 
 		$p = (object)[ 
@@ -154,12 +157,13 @@ class Api2Db_Actions
 
 		foreach ( $request as $key => $value) 
 			if( is_string( $value ) )
-				$p->input[ $key ] = $this->Api2Db->functions->put_values( $value, [ 'input' => $p_parent->input ] );
+				$p->input[ $key ] = $this->Api2Db->functions->put_values( $value, [ 'input' => $p_parent->input] );
 			else
 				$p->input[ $key ] = $value;
 
 
 		$p->putvalues['input'] = &$p->input;
+		$p->putvalues['this'] = $_this;
 		$p->putvalues['local'] = &$p_parent->local;
 
 
@@ -1069,7 +1073,7 @@ class Api2Db_Actions
 
 
 		// Для модуля жестко установлено where
-		if( isset( $p->module['where']['every'] ) ){
+		if( !empty( $p->module['where']['every'] ) ){
 			$where['every'] = "and ".$this->Api2Db->functions->put_values( $p->module['where']['every'], $p->putvalues );
 
 		}
@@ -1116,7 +1120,7 @@ class Api2Db_Actions
 					if( $filter['sql'] == 'key' )
 						$sql = ':this->key=":this->value"';
 
-					else( !empty( $filter['sql'] ) )
+					if( !empty( $filter['sql'] ) and  $filter['sql'] != 'key' and  $filter['sql'] != 'like' )
 						$sql = $filter['sql'];
 				}
 
@@ -1225,9 +1229,11 @@ class Api2Db_Actions
 
 				$field = $p->module['fields'][$keyField];
 
+
 				if( isset( $field['type'] ) )
-					if( $field['type'] == 'submodule' )
+					if( $field['type'] == 'subquery' )
 						continue;
+					
 
 				if( isset($field['field']) )
 					$outfields[$keyField] = $field['field'] . ' as ' . $keyField;
@@ -1354,6 +1360,22 @@ class Api2Db_Actions
 	}
 
 
+	private function make_row_submodule( $row, $p ){
+
+		if( isset( $p->module['fields'] ) )
+			foreach ($p->module['fields'] as $key => $field) {
+				if( isset( $field['type'] ) )
+					if($field['type'] == 'subquery' and isset( $field[ $p->action ] ) ){
+
+						$row[$key] = $this->make_submodule( $field[ $p->action ], $p, $row );
+					
+					}
+			}
+
+		return $row;
+	}
+
+
 	private function make_row( $p ){
 
 		$row = [];
@@ -1376,7 +1398,7 @@ class Api2Db_Actions
 
 
 			if( isset( $p->module['fields'][$key]['type'] ) )
-			if( $p->module['fields'][$key]['type'] != 'search' ) {
+			if( $p->module['fields'][$key]['type'] != 'search' and $p->module['fields'][$key]['type'] != 'subquery' ) {
 
 				$row[$key]['key'] = $key;
 				
@@ -1432,8 +1454,11 @@ class Api2Db_Actions
 				}
 
 
+
 			}
 		}
+
+		$row = $this->make_row_submodule($row, $p);
 
 		return $row;
 	}
@@ -1445,7 +1470,7 @@ class Api2Db_Actions
 		if( isset( $p->module['fields'][$key] ) ) {
 
 			if( isset( $p->module['fields'][$key]['type'] ) )
-			if( $p->module['fields'][$key]['type'] != 'search' ) {
+			if( $p->module['fields'][$key]['type'] != 'search' and $p->module['fields'][$key]['type'] != 'subquery' ) {
 
 				$keyval 		= $p->module['fields'][$key];
 				$row['key'] 	= $key;
@@ -1494,7 +1519,7 @@ class Api2Db_Actions
 		
 		if( isset( $p->module['fields'][$key] ) ) {
 
-			if( $p->module['fields'][$key]['type'] != 'search' ) {
+			if( $p->module['fields'][$key]['type'] != 'search' and $p->module['fields'][$key]['type'] != 'subquery' ) {
 
 				$keyval = $p->module['fields'][$key];
 				
