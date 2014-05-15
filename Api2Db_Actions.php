@@ -1288,6 +1288,8 @@ class Api2Db_Actions
 				'error' => 'badpage',
 			]);
 
+			$p->error = 'badpage';
+
 			return false;
 		}
 
@@ -1316,6 +1318,8 @@ class Api2Db_Actions
 				$this->storage->push_debug_by_key( 'make_limit', [
 					'error' => 'badpage',
 				]);
+				
+				$p->error = 'badpage';
 
 				return false;
 			
