@@ -1,7 +1,8 @@
 <?php
 
+namespace Api2Db;
 
-class Api2Db_Actions 
+class Actions 
 {
 	final public function __construct( $Api2Db )
 	{

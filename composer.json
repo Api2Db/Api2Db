@@ -1,0 +1,16 @@
+{
+    "name":"Api2Db/Api2Db",
+    "version":"1.0",
+    "description":"A simple tool for creating business logic",
+    "require":{
+        "php":">=5.3.0"
+    },
+    "license": [
+        "GPL-3.0-or-later"
+    ],
+    "autoload":{
+        "psr-4":{
+            "Api2Db\\":"src/"
+        }
+    }
+}

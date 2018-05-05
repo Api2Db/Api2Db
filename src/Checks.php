@@ -1,6 +1,8 @@
 <?php
 
-class Api2Db_Checks
+namespace Api2Db;
+
+class Checks
 {
 
 	final public function __construct( $functions )

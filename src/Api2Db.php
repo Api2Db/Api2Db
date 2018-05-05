@@ -1,5 +1,7 @@
 <?php
 
+namespace Api2Db;
+
 require_once( dirname(__FILE__) . '/Api2Db_Functions.php');
 require_once( dirname(__FILE__) . '/Api2Db_Storage.php');
 require_once( dirname(__FILE__) . '/Api2Db_Converts.php');

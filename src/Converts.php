@@ -1,6 +1,8 @@
 <?php
 
-class Api2Db_Converts
+namespace Api2Db;
+
+class Converts
 {
 
 	final public function __construct( $functions )

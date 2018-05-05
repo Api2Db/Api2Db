@@ -1,6 +1,8 @@
 <?php
 
-class Api2Db_Storage
+namespace Api2Db;
+
+class Storage
 {
 
 	static private $_instance = null;
