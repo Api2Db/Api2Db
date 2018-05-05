@@ -5,23 +5,23 @@ namespace Api2Db;
 class Checks
 {
 
-	final public function __construct( $functions )
+	final public function __construct( $Api2Db )
 	{
-		$this->storage 		= Api2Db_Storage::Instance();
-		$this->db 			= Api2Db_Db::Instance();
-		$this->functions 	= $functions; // TODO сделать проверку на класс родитель
+		$this->storage 		= Storage::Instance();
+		$this->db 			= Db::Instance();
+		$this->Api2Db 		= $Api2Db; 
 	}
 
 	
 	final public function single_email( $arg ){
-		if( $arg['value'] != ''  && $this->functions->is_email($arg['value']) == 0 )
+		if( $arg['value'] != ''  && $this->Api2Db->functions->is_email($arg['value']) == 0 )
 		   	return array( 'error' => 'bademail', 'val' => $arg['value'] );
 		else
 			return true;
 	}
 
 	final public function single_email_mask( $arg ){
-		if( $arg['value'] != ''  && $this->functions->is_email_mask( $arg['value'] ) == 0 )
+		if( $arg['value'] != ''  && $this->Api2Db->functions->is_email_mask( $arg['value'] ) == 0 )
 		   	return array( 'error' => 'bademail', 'val' => $arg['value'] );
 		else
 			return true;

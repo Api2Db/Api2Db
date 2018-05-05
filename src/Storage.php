@@ -77,11 +77,27 @@ class Storage
 
 	/* Modules */
 
-	final public function add_modules( $modules ){
+	final public function add_modules( $path ){
 		
-		if( empty( $this->modules ) && !empty( $modules ) ){
+		if( is_string( $path ) ){
 			
-			$this->modules = $modules;
+			
+			$modules = glob($path."/*.php");
+
+			if( empty( $modules ) ){
+				return false;
+			}
+
+			foreach ($modules as $filename) {
+
+				$module = include( $filename );
+
+				if( is_array( $module ) )			
+					 $this->modules[ basename($filename, ".php") ] = $module;
+
+			}
+
+
 			$this->extend_modules();
 		
 		} else

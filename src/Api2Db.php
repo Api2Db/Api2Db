@@ -2,14 +2,6 @@
 
 namespace Api2Db;
 
-require_once( dirname(__FILE__) . '/Api2Db_Functions.php');
-require_once( dirname(__FILE__) . '/Api2Db_Storage.php');
-require_once( dirname(__FILE__) . '/Api2Db_Converts.php');
-require_once( dirname(__FILE__) . '/Api2Db_Checks.php');
-require_once( dirname(__FILE__) . '/Api2Db_Actions.php');
-require_once( dirname(__FILE__) . '/Api2Db_Db.php');
-
-
 class Api2Db {
 
 	public  $initErrors = []; 		// Ошибки инициализации
@@ -30,7 +22,7 @@ class Api2Db {
 			'checks'	=> ''
 		];
 
-		$this->storage 	= Api2Db_Storage::Instance();
+		$this->storage 	= Storage::Instance();
 
 		$params 		= array_replace_recursive( $def_params, $params );
 		$this->init 	= true;
@@ -47,32 +39,32 @@ class Api2Db {
 		$this->storage->add_names( $params['names'] );
 		$this->storage->add_errors( $params['errors'] );
 		
-		$this->db = Api2Db_Db::Instance();
+		$this->db = Db::Instance();
 		$this->db->clear( $this );
 		$this->db->connect();
 
-		if( get_parent_class( $params['functions'] ) == 'Api2Db_Functions' )
+		if( get_parent_class( $params['functions'] ) == 'Api2Db\Functions' )
 			$this->functions = $params['functions'];
 		else
-			$this->functions = new Api2Db_Functions();
+			$this->functions = new Functions();
 
 
-		if( get_parent_class( $params['converts'] ) == 'Api2Db_Converts' )
+		if( get_parent_class( $params['converts'] ) == 'Api2Db\Converts' )
 			$this->converts = $params['converts'];
 		else
-			$this->converts = new Api2Db_Converts( $this->functions );
+			$this->converts = new Converts( $this->functions );
 
 
-		if( get_parent_class( $params['checks'] ) == 'Api2Db_Checks' )
+		if( get_parent_class( $params['checks'] ) == 'Api2Db\Checks' )
 			$this->checks = $params['checks'];
 		else
-			$this->checks = new Api2Db_Converts( $this->functions );
+			$this->checks = new Converts( $this->functions );
 
 
-		if( get_parent_class( $params['actions'] ) == 'Api2Db_Actions' )
+		if( get_parent_class( $params['actions'] ) == 'Api2Db\Actions' )
 			$this->actions = $params['actions'];
 		else
-			$this->actions = new  Api2Db_Actions( $this );
+			$this->actions = new  Actions( $this );
 
 
 		if( is_object( $params['triggers'] ) )

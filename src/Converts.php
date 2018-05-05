@@ -7,8 +7,8 @@ class Converts
 
 	final public function __construct( $functions )
 	{
-		$this->storage 		= Api2Db_Storage::Instance();
-		$this->db 			= Api2Db_Db::Instance();
+		$this->storage 		= Storage::Instance();
+		$this->db 			= Db::Instance();
 		$this->functions 	= $functions; // TODO сделать проверку на класс родитель
 	}
 

@@ -25,7 +25,7 @@ class Db
 
 	private function __construct(){
 
-		$this->storage 		= Api2Db_Storage::Instance();
+		$this->storage 		= Storage::Instance();
 
 	}
 
@@ -82,7 +82,7 @@ class Db
 					$config['attr'] = [];
 
 
-				$this->connections[$name_connect] = new PDO(
+				$this->connections[$name_connect] = new \PDO(
 					$connect,
 					$config['user'],
 					$config['password'],
@@ -102,7 +102,7 @@ class Db
 				return true;
 			}
 
-			catch( PDOException $e ){
+			catch( \PDOException $e ){
 
 				$this->storage->push_debug_db( [
 					'error' => ['message' => $e->getMessage(), 'code' => $e->getCode()],
@@ -128,7 +128,7 @@ class Db
 
 			try{
 
-				$this->connections[$name_connect] = new PDO ( 
+				$this->connections[$name_connect] = new \PDO ( 
 					'mysql:host=' . $config['server'] . ';dbname=' . $config['database'], $config['user'], $config['password'], $config['attr']
 				);
 				
@@ -149,53 +149,6 @@ class Db
 			catch( PDOException $e ){
 			
 
-
-				$this->storage->push_debug_db( [
-					'error' => ['message' => $e->getMessage(), 'code' => $e->getCode()],
-					'text' 	=> "Failed connection to $name_connect"
-				]);
-
-
-				return false;
-			}
-
-		}
-
-		return true;
-
-	}
-
-
-	final public function connect_oracle( $config, $name_connect ){
-		
-
-
-		// Создание коннекта
-		if( empty( $this->connections[$name_connect] ) ){
-
-			try{
-
-				$this->connections[$name_connect] = new PDO(
-					'oci:dbname='.$config['server'].'/'.$config['database'].';charset=AL32UTF8',
-					$config['user'],
-					$config['password'],
-					$config['attr']
-				);
-
-				$this->currentDB							 					= $config['database'];
-				$this->currentConnectionName									= $name_connect;
-				$this->currentConnection										= &$this->connections[$name_connect];
-				$this->storage->push_debug_db("create connect $name_connect");
-
-				if( isset( $config['querys'] ) )
-					foreach ($config['querys'] as $query) {
-						$this->currentConnection->query( $query );
-					}
-
-				return true;
-			}
-
-			catch( PDOException $e ){
 
 				$this->storage->push_debug_db( [
 					'error' => ['message' => $e->getMessage(), 'code' => $e->getCode()],
@@ -263,7 +216,7 @@ class Db
 
 		if( !empty( $sql ) ){
 
-			$result 					= @$sql->fetchAll( PDO::FETCH_ASSOC );
+			$result 					= @$sql->fetchAll( \PDO::FETCH_ASSOC );
 			$this->sqlcache[ $sqlmd5 ] 	= $result;	
 
 			return $result;

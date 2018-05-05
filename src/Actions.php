@@ -8,8 +8,8 @@ class Actions
 	{
 
 		$this->Api2Db 	= $Api2Db;
-		$this->storage 	= Api2Db_Storage::Instance();
-		$this->db 		= Api2Db_Db::Instance();
+		$this->storage 	= Storage::Instance();
+		$this->db 		= Db::Instance();
 
 	}
 
@@ -984,7 +984,7 @@ class Actions
 	}
 
 
-	private function is_requare( $p ){
+	public function is_requare( $p ){
 
 		$require = [];
 

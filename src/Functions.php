@@ -8,8 +8,8 @@ class Functions
 
 	final public function __construct()
 	{
-		$this->storage 		= Api2Db_Storage::Instance();
-		$this->db 			= Api2Db_Db::Instance();
+		$this->storage 		= Storage::Instance();
+		$this->db 			= Db::Instance();
 	}
 
 	// подстановка значений в sql запрос
